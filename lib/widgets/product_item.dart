@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Product product = Provider.of<Product>(context);
+    //false: não vai ser notificado a partir desse product.
+    final Product product = Provider.of<Product>(context, listen: false);
     //RoundedRectangle
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -21,11 +22,16 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(
-                product.isFavorite ? Icons.favorite : Icons.favorite_border),
-            color: Theme.of(context).accentColor,
-            onPressed: () => product.toggleFavorite(),
+          /* O Consumer é um widget, então você pode colocar ele exatamente no ponto que
+          vc quer na árvore. Perceba que única coisa que muda é o ícone do favorito.
+          Só vai redenrizar essa parte. */
+          leading: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                  product.isFavorite ? Icons.favorite : Icons.favorite_border),
+              color: Theme.of(context).accentColor,
+              onPressed: () => product.toggleFavorite(),
+            ),
           ),
           title: Text(
             product.title,
