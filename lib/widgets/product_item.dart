@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shop/models/product.dart';
 import '../utils/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class ProductItem extends StatelessWidget {
-  final Product product;
-  ProductItem(this.product);
   @override
   Widget build(BuildContext context) {
+    final Product product = Provider.of<Product>(context);
     //RoundedRectangle
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -22,9 +22,10 @@ class ProductItem extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: IconButton(
-            icon: Icon(Icons.favorite),
+            icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border),
             color: Theme.of(context).accentColor,
-            onPressed: () {},
+            onPressed: () => product.toggleFavorite(),
           ),
           title: Text(
             product.title,
