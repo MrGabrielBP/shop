@@ -6,9 +6,11 @@ import '../data/dummy_data.dart';
 class Products with ChangeNotifier {
   List<Product> _items = DUMMY_PRODUCTS;
 
-  List<Product> get items {
-    return [..._items];
-    //retorna uma cópia da lista. (spread). Por questões de segurança.
+  List<Product> get items => [..._items];
+  //retorna uma cópia da lista. (spread). Por questões de segurança.
+
+  List<Product> get favoriteItems {
+    return _items.where((prod) => prod.isFavorite).toList();
   }
 
   void addProduct(Product product) {
@@ -17,3 +19,17 @@ class Products with ChangeNotifier {
     notifyListeners(); //É preciso notificar os interessados.
   }
 }
+
+/*
+bool _showFavoriteOnly = false;
+
+void showFavoriteOnly() {
+  _showFavoriteOnly = true;
+  notifyListeners();
+}
+
+void showAll() {
+  _showFavoriteOnly = false;
+  notifyListeners();
+}
+*/
