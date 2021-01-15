@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
+import './product.dart';
 import '../data/dummy_data.dart';
 
 //Notificador de mudanças. Notifica todos os interessados quando um determinado valor for modificado.
