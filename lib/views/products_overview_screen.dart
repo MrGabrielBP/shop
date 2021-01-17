@@ -51,7 +51,7 @@ class _ProductOverViewScreenState extends State<ProductOverViewScreen> {
               onPressed: () => Navigator.of(context).pushNamed(AppRoutes.CART),
             ),
             builder: (ctx, cart, child) => Badge(
-              value: cart.itemCount.toString(),
+              value: cart.itemsCount.toString(),
               child: child,
               //Desta forma o IconButton não vai ser redenrizado novamente, pois não sofre alteração.
             ),
