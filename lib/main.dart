@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         routes: {
+          AppRoutes.HOME: (ctx) => ProductOverViewScreen(),
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
         },
-        home: ProductOverViewScreen(),
       ),
     );
   }
