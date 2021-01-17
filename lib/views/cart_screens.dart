@@ -6,7 +6,7 @@ import 'package:shop/widgets/cart_item_widget.dart';
 class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Cart cart = Provider.of<Cart>(context, listen: false);
+    final Cart cart = Provider.of<Cart>(context);
     final List<CartItem> cartItems = cart.items.values.toList();
     return Scaffold(
       appBar: AppBar(
