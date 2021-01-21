@@ -4,6 +4,8 @@ import 'package:shop/provider/orders.dart';
 import 'package:shop/views/cart_screens.dart';
 import 'package:shop/views/orders_screen.dart';
 import 'package:shop/views/product_detail_screen.dart';
+import 'package:shop/views/product_form_screen.dart';
+import 'package:shop/views/product_screen.dart';
 import './views/products_overview_screen.dart';
 import './utils/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailScreen(),
           AppRoutes.CART: (ctx) => CartScreen(),
           AppRoutes.ORDERS: (ctx) => OrdersScreen(),
+          AppRoutes.PRODUCTS: (ctx) => ProductScreen(),
+          AppRoutes.PRODUCT_FORM: (ctx) => ProductFormScreen(),
         },
       ),
     );

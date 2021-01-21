@@ -18,6 +18,10 @@ class Products with ChangeNotifier {
     //Se alguém chamar esse método, aconteceu um evento.
     notifyListeners(); //É preciso notificar os interessados.
   }
+
+  int get itemsCount {
+    return _items.length;
+  }
 }
 
 /*

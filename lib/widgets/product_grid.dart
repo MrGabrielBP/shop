@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/products.dart';
-import './product_item.dart';
+import 'product_grid_item.dart';
 
 class ProductGrid extends StatelessWidget {
   final bool showFavoriteOnly;
@@ -24,7 +24,7 @@ class ProductGrid extends StatelessWidget {
             //Instancia Product() já existe. Usar o Provider com .value:
             itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
               value: products[i],
-              child: ProductItem(),
+              child: ProductGridItem(),
             ),
             //Itens terão tamanho fixo.
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
