@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop/provider/product.dart';
+import 'package:shop/provider/products.dart';
 
 class ProductFormScreen extends StatefulWidget {
   @override
@@ -58,12 +60,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     //vai disparar o onSave em cada dos nossos TextFormField.
     _form.currentState.save();
     final newProduct = Product(
-      id: Random().nextDouble().toString(),
       title: _formData['title'],
       price: _formData['price'],
       description: _formData['description'],
       imageUrl: _formData['imageUrl'],
     );
+    //Pode usar um provider fora do Build desde que use o listen: false
+    Provider.of<Products>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   @override
