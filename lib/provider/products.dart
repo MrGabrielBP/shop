@@ -28,6 +28,27 @@ class Products with ChangeNotifier {
     notifyListeners(); //É preciso notificar os interessados.
   }
 
+  void updateProduct(Product product) {
+    if (product == null || product.id == null) {
+      return;
+    }
+    //retorna o index do 1o elemente que satisfaz a função.
+    final index = _items.indexWhere((prod) => prod.id == product.id);
+    if (index >= 0) {
+      _items[index] = product;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    final index = _items.indexWhere((prod) => prod.id == id);
+    //Para notificar os Listeners apenas quando o id do produto realmente existir.
+    if (index >= 0) {
+      _items.removeWhere((prod) => prod.id == id);
+      notifyListeners();
+    }
+  }
+
   int get itemsCount {
     return _items.length;
   }

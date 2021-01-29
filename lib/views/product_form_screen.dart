@@ -27,6 +27,26 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     //registrar uma função para ser chamada quando o objeto mudar.
   }
 
+  //Para atualização do Product.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final product = ModalRoute.of(context).settings.arguments as Product;
+    if (product != null) {
+      if (_formData.isEmpty) {
+        _formData['id'] = product.id;
+        _formData['title'] = product.title;
+        _formData['description'] = product.description;
+        _formData['price'] = product.price;
+        _formData['imageUrl'] = product.imageUrl;
+        _imageUrlController.text = product.imageUrl;
+      } else {
+        _formData['price'] = '';
+      }
+    }
+  }
+
   void _updateImageUrl() {
     if (isValidImageUrl(_imageUrlController.text)) {
       setState(() {}); //por ser um controller.
@@ -59,14 +79,20 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     if (!isValid) return;
     //vai disparar o onSave em cada dos nossos TextFormField.
     _form.currentState.save();
-    final newProduct = Product(
+    final product = Product(
+      id: _formData['id'],
       title: _formData['title'],
       price: _formData['price'],
       description: _formData['description'],
       imageUrl: _formData['imageUrl'],
     );
     //Pode usar um provider fora do Build desde que use o listen: false
-    Provider.of<Products>(context, listen: false).addProduct(newProduct);
+    final products = Provider.of<Products>(context, listen: false);
+    if (_formData['id'] == null) {
+      products.addProduct(product);
+    } else {
+      products.updateProduct(product);
+    }
     Navigator.of(context).pop();
   }
 
@@ -87,6 +113,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
             child: ListView(
               children: [
                 TextFormField(
+                  //valor inicial (para caso de atualização).
+                  initialValue: _formData['title'],
                   decoration: InputDecoration(labelText: 'Título'),
                   //mudar ação do enter para mudar para next (textfield).
                   textInputAction: TextInputAction.next,
@@ -107,6 +135,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   },
                 ),
                 TextFormField(
+                  //valor inicial (para caso de atualização).
+                  initialValue: _formData['price'].toString(),
                   decoration: InputDecoration(labelText: 'Preço'),
                   focusNode: _priceFocusNode,
                   textInputAction: TextInputAction.next,
@@ -126,6 +156,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   },
                 ),
                 TextFormField(
+                  //valor inicial (para caso de atualização).
+                  initialValue: _formData['description'],
                   decoration: InputDecoration(labelText: 'Descrição'),
                   maxLines: 3,
                   keyboardType: TextInputType.multiline,
@@ -148,6 +180,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        //valor inicial: do controller
                         focusNode: _imageUrlFocusNode,
                         controller: _imageUrlController,
                         decoration: InputDecoration(
