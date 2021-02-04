@@ -41,9 +41,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         _formData['price'] = product.price;
         _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
-      } else {
-        _formData['price'] = '';
       }
+    } else {
+      _formData['price'] = '';
     }
   }
 
