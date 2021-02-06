@@ -21,7 +21,8 @@ class Products with ChangeNotifier {
     //para criar coleções, adc dps da url /categoria. No Firebase, terminar com .json
     const url =
         'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
-    http.post(
+    http
+        .post(
       url,
       //espera um json (o json espera um map, para a conversão).
       body: json.encode({
@@ -31,17 +32,20 @@ class Products with ChangeNotifier {
         'imageUrl': newProduct.imageUrl,
         'isFavorite': newProduct.isFavorite,
       }),
-    );
-    _items.add(
-      Product(
-          id: Random().nextDouble().toString(),
-          title: newProduct.title,
-          description: newProduct.description,
-          price: newProduct.price,
-          imageUrl: newProduct.imageUrl),
-    );
-    //Se alguém chamar esse método, aconteceu um evento.
-    notifyListeners(); //É preciso notificar os interessados.
+    )
+        .then((response) {
+      //É um Future retorna um json {name: id}
+      _items.add(
+        Product(
+            id: json.decode(response.body)['name'],
+            title: newProduct.title,
+            description: newProduct.description,
+            price: newProduct.price,
+            imageUrl: newProduct.imageUrl),
+      );
+      //Se alguém chamar esse método, aconteceu um evento.
+      notifyListeners(); //É preciso notificar os interessados.
+    });
   }
 
   void updateProduct(Product product) {
