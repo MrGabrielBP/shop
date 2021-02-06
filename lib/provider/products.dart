@@ -17,11 +17,11 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  void addProduct(Product newProduct) {
+  Future<void> addProduct(Product newProduct) {
     //para criar coleções, adc dps da url /categoria. No Firebase, terminar com .json
     const url =
         'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
-    http
+    return http //then retorna uma Future também.
         .post(
       url,
       //espera um json (o json espera um map, para a conversão).
