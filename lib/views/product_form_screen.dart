@@ -93,7 +93,22 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     //Pode usar um provider fora do Build desde que use o listen: false
     final products = Provider.of<Products>(context, listen: false);
     if (_formData['id'] == null) {
-      products.addProduct(product).then((_) {
+      products.addProduct(product).catchError((error) {
+        //tratar erros.
+        return showDialog<Null>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Ocorreu um erro!'),
+            content: Text('Ocorreu um erro ao salvar o produto!'),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text('Ok'),
+              )
+            ],
+          ),
+        );
+      }).then((_) {
         setState(() {
           _isLoading = false;
         });
