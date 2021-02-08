@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './product.dart';
@@ -17,12 +15,13 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
-  Future<void> addProduct(Product newProduct) {
-    //para criar coleções, adc dps da url /categoria. No Firebase, terminar com .json
+  //marcar função como assíncrona.
+  Future<void> addProduct(Product newProduct) async {
     const url =
         'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
-    return http //then retorna uma Future também.
-        .post(
+
+    //espera o retorno de uma função (Future)
+    final response = await http.post(
       url,
       //espera um json (o json espera um map, para a conversão).
       body: json.encode({
@@ -32,20 +31,18 @@ class Products with ChangeNotifier {
         'imageUrl': newProduct.imageUrl,
         'isFavorite': newProduct.isFavorite,
       }),
-    )
-        .then((response) {
-      //É um Future retorna um json {name: id}
-      _items.add(
-        Product(
-            id: json.decode(response.body)['name'],
-            title: newProduct.title,
-            description: newProduct.description,
-            price: newProduct.price,
-            imageUrl: newProduct.imageUrl),
-      );
-      //Se alguém chamar esse método, aconteceu um evento.
-      notifyListeners(); //É preciso notificar os interessados.
-    });
+    ); //espera a resposta chegar antes de ir para a próxima linha. Não precisa do then.
+
+    _items.add(
+      Product(
+          id: json.decode(response.body)['name'],
+          title: newProduct.title,
+          description: newProduct.description,
+          price: newProduct.price,
+          imageUrl: newProduct.imageUrl),
+    );
+    //Se alguém chamar esse método, aconteceu um evento.
+    notifyListeners(); //É preciso notificar os interessados.
   }
 
   void updateProduct(Product product) {
