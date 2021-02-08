@@ -2,11 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import './product.dart';
-import '../data/dummy_data.dart';
 
 //Notificador de mudanças. Notifica todos os interessados quando um determinado valor for modificado.
 class Products with ChangeNotifier {
-  List<Product> _items = DUMMY_PRODUCTS;
+  final String _url =
+      'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
+  List<Product> _items = [];
 
   List<Product> get items => [..._items];
   //retorna uma cópia da lista. (spread). Por questões de segurança.
@@ -15,14 +16,32 @@ class Products with ChangeNotifier {
     return _items.where((prod) => prod.isFavorite).toList();
   }
 
+  Future<void> loadProducts() async {
+    final response = await http.get(_url);
+    Map<String, dynamic> data = json.decode(response.body);
+    _items.clear();
+    if (data != null) {
+      data.forEach((productID, productData) {
+        _items.add(
+          Product(
+            id: productID,
+            title: productData['title'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+          ),
+        );
+      });
+      notifyListeners();
+    }
+    return Future.value();
+  }
+
   //marcar função como assíncrona.
   Future<void> addProduct(Product newProduct) async {
-    const url =
-        'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
-
     //espera o retorno de uma função (Future)
     final response = await http.post(
-      url,
+      _url,
       //espera um json (o json espera um map, para a conversão).
       body: json.encode({
         'title': newProduct.title,
