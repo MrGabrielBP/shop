@@ -5,8 +5,8 @@ import './product.dart';
 
 //Notificador de mudanças. Notifica todos os interessados quando um determinado valor for modificado.
 class Products with ChangeNotifier {
-  final String _url =
-      'https://flutter-375bc-default-rtdb.firebaseio.com/products.json';
+  final String _baseUrl =
+      'https://flutter-375bc-default-rtdb.firebaseio.com/products';
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -17,7 +17,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(_url);
+    final response = await http.get("$_baseUrl.json");
     Map<String, dynamic> data = json.decode(response.body);
     _items.clear();
     if (data != null) {
@@ -41,7 +41,7 @@ class Products with ChangeNotifier {
   Future<void> addProduct(Product newProduct) async {
     //espera o retorno de uma função (Future)
     final response = await http.post(
-      _url,
+      "$_baseUrl.json",
       //espera um json (o json espera um map, para a conversão).
       body: json.encode({
         'title': newProduct.title,
@@ -64,13 +64,23 @@ class Products with ChangeNotifier {
     notifyListeners(); //É preciso notificar os interessados.
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     if (product == null || product.id == null) {
       return;
     }
     //retorna o index do 1o elemente que satisfaz a função.
     final index = _items.indexWhere((prod) => prod.id == product.id);
     if (index >= 0) {
+      //patch: atualização
+      await http.patch(
+        "$_baseUrl/${product.id}.json",
+        body: json.encode({
+          'title': product.title,
+          'description': product.description,
+          'price': product.price,
+          'imageUrl': product.imageUrl,
+        }),
+      );
       _items[index] = product;
       notifyListeners();
     }

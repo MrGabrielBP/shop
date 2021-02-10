@@ -92,35 +92,31 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 
     //Pode usar um provider fora do Build desde que use o listen: false
     final products = Provider.of<Products>(context, listen: false);
-    if (_formData['id'] == null) {
-      try {
+    try {
+      if (_formData['id'] == null) {
         await products.addProduct(product);
-        Navigator.of(context).pop(); //só chama o pop depois de adicionar.
-      } catch (error) {
-        await showDialog<Null>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text('Ocorreu um erro!'),
-            content: Text('Ocorreu um erro ao salvar o produto!'),
-            actions: [
-              FlatButton(
-                onPressed: () => Navigator.of(ctx).pop(),
-                child: Text('Ok'),
-              )
-            ],
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
+      } else {
+        await products.updateProduct(product);
       }
-    } else {
-      products.updateProduct(product);
+      Navigator.of(context).pop(); //só chama o pop depois de adicionar.
+    } catch (error) {
+      await showDialog<Null>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Ocorreu um erro!'),
+          content: Text('Ocorreu um erro ao salvar o produto!'),
+          actions: [
+            FlatButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text('Ok'),
+            )
+          ],
+        ),
+      );
+    } finally {
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context).pop();
     }
   }
 
