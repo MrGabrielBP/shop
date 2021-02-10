@@ -86,12 +86,21 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     final index = _items.indexWhere((prod) => prod.id == id);
     //Para notificar os Listeners apenas quando o id do produto realmente existir.
     if (index >= 0) {
-      _items.removeWhere((prod) => prod.id == id);
+      final product = _items[index];
+      final response = await http.delete("$_baseUrl/${product.id}.json");
+      //remove no front. (Exclusão otimista)
+      _items.remove(product);
       notifyListeners();
+
+      //se der errado ele restaura.
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+      }
     }
   }
 
