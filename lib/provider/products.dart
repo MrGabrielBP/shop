@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/http_exception.dart';
 import './product.dart';
 
 //Notificador de mudanças. Notifica todos os interessados quando um determinado valor for modificado.
@@ -100,6 +101,9 @@ class Products with ChangeNotifier {
       if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
+        //Não lança exceção automaticamente.
+        throw HttpException('Ocorreu um erro na exclusão do produto.');
+        //lançando a exceção personalizada.
       }
     }
   }
