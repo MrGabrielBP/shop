@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop/exceptions/http_exception.dart';
 import './product.dart';
+import '../utils/constants.dart';
 
 //Notificador de mudanças. Notifica todos os interessados quando um determinado valor for modificado.
 class Products with ChangeNotifier {
   final String _baseUrl =
-      'https://flutter-375bc-default-rtdb.firebaseio.com/products';
+      '${Constants.BASE_API_URL}/products';
   List<Product> _items = [];
 
   List<Product> get items => [..._items];

@@ -3,6 +3,8 @@ import 'package:shop/provider/cart.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shop/utils/constants.dart';
+
 class Order {
   final String id;
   final double total;
@@ -18,7 +20,7 @@ class Order {
 }
 
 class Orders with ChangeNotifier {
-  final _baseUrl = 'https://flutter-375bc-default-rtdb.firebaseio.com/orders';
+  final _baseUrl = '${Constants.BASE_API_URL}/orders';
   List<Order> _items = [];
 
   List<Order> get items {
