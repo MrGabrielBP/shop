@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/auth_exception.dart';
 
 //procurar url em firebase -> docs
 class Auth with ChangeNotifier {
@@ -18,7 +19,12 @@ class Auth with ChangeNotifier {
           'password': password,
           'returnSecureToken': true,
         }));
-    print(json.decode(response.body));
+
+    final responseBody = json.decode(response.body);
+    if (responseBody["error"] != null) {
+      //Lançar exceção
+      throw AuthException(responseBody["error"]["message"]);
+    }
 
     return Future.value();
   }
