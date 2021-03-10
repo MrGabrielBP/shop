@@ -3,13 +3,11 @@ import 'package:shop/provider/auth.dart';
 import 'package:shop/provider/cart.dart';
 import 'package:shop/provider/orders.dart';
 import 'package:shop/views/auth_home_home.dart';
-import 'package:shop/views/auth_screen.dart';
 import 'package:shop/views/cart_screen.dart';
 import 'package:shop/views/orders_screen.dart';
 import 'package:shop/views/product_detail_screen.dart';
 import 'package:shop/views/product_form_screen.dart';
 import 'package:shop/views/product_screen.dart';
-import './views/products_overview_screen.dart';
 import './utils/app_routes.dart';
 import 'package:provider/provider.dart';
 import './provider/products.dart';
@@ -24,16 +22,21 @@ class MyApp extends StatelessWidget {
       providers: [
         //instanciar os produtos.
         ChangeNotifierProvider(
-          create: (_) => Products(),
+          create: (_) => Auth(),
+        ),
+        //passar o token do provider Auth para cá. Para conseguir pegar dados de outro Provider.
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: (_) => new Products(null, []),
+          update: (ctx, auth, previousProducts) =>
+              Products(auth.token, previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => Orders(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => Auth(),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: (_) => new Orders(null, []),
+          update: (ctx, auth, previousOrders) =>
+              Orders(auth.token, previousOrders.items),
         ),
       ],
       child: MaterialApp(

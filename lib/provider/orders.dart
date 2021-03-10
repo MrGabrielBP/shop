@@ -23,6 +23,9 @@ class Orders with ChangeNotifier {
   final _baseUrl = '${Constants.BASE_API_URL}/orders';
   List<Order> _items = [];
 
+  String _token;
+  Orders(this._token, this._items);
+
   List<Order> get items {
     return [..._items];
   }
@@ -33,26 +36,25 @@ class Orders with ChangeNotifier {
 
   Future<void> loadOrders() async {
     List<Order> loadedItems = [];
-    final response = await http.get("$_baseUrl.json");
+    final response = await http.get("$_baseUrl.json?auth=$_token");
     Map<String, dynamic> data = json.decode(response.body);
     //Dar print para visualizar a response!!!
     if (data != null) {
       data.forEach((orderID, orderData) {
         loadedItems.add(
           Order(
-            id: orderID,
-            total: orderData['total'],
-            date: DateTime.parse(orderData['date']),
-            products: (orderData['products'] as List<dynamic>).map((item){
-              return CartItem(
-                id: item['id'], 
-                productId: item['productId'], 
-                title: item['title'], 
-                quantity: item['quantity'], 
-                price: item['price'],
+              id: orderID,
+              total: orderData['total'],
+              date: DateTime.parse(orderData['date']),
+              products: (orderData['products'] as List<dynamic>).map((item) {
+                return CartItem(
+                  id: item['id'],
+                  productId: item['productId'],
+                  title: item['title'],
+                  quantity: item['quantity'],
+                  price: item['price'],
                 );
-            }).toList()
-          ),
+              }).toList()),
         );
       });
       notifyListeners();
@@ -64,7 +66,7 @@ class Orders with ChangeNotifier {
   Future<void> addOrder(Cart cart) async {
     final date = DateTime.now();
     final response = await http.post(
-      '$_baseUrl.json',
+      '$_baseUrl.json?auth=$_token',
       body: json.encode({
         'total': cart.totalAmount,
         //é um formato padrão para o firebase (facilita para recuperar)
