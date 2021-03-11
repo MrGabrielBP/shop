@@ -26,15 +26,15 @@ class MyApp extends StatelessWidget {
         ),
         //passar o token do provider Auth para cá. Para conseguir pegar dados de outro Provider.
         ChangeNotifierProxyProvider<Auth, Products>(
-          create: (_) => new Products(null, []),
+          create: (_) => new Products(),
           update: (ctx, auth, previousProducts) =>
-              Products(auth.token, previousProducts.items),
+              Products(auth.token, auth.userId, previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
         ChangeNotifierProxyProvider<Auth, Orders>(
-          create: (_) => new Orders(null, []),
+          create: (_) => new Orders(),
           update: (ctx, auth, previousOrders) =>
               Orders(auth.token, previousOrders.items),
         ),
