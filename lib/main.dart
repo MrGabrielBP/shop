@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, Orders>(
           create: (_) => new Orders(),
           update: (ctx, auth, previousOrders) =>
-              Orders(auth.token, previousOrders.items),
+              Orders(auth.token, auth.userId, previousOrders.items),
         ),
       ],
       child: MaterialApp(
